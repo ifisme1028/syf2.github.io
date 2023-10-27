@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>曼德和朵拉在一起</title>
+    <style>
+        body {
+                background-image: url('syf2.png');
+                background-size: 60%;
+                background-position: center center;
+                background-repeat: no-repeat;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+            }       
+        #timer {
+            font-size: 24px;
+            color: #333;
+            border: 2px solid #999;
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 3px 3px 5px #888;
+            background: linear-gradient(to bottom, #ff9900, #ff6600);
+            display: none;
+        }
+
+        #startButton {
+            background-color: #ff0059;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #startButton:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <button id="startButton" onclick="startTimer()">请单击查看</button>
+    <div id="timer">曼德和朵拉在一起已经: 0 年, 0 月, 0 天, 0 小时, 0 分钟, 0 秒啦</div>
+
+    <script>
+        let timerInterval = null; // 声明一个变量用于存储定时器的引用
+
+        function startTimer() {
+            document.getElementById("startButton").style.display = "none";
+            document.getElementById("timer").style.display = "block";
+            updateTimer(); // 立即更新时间
+            timerInterval = setInterval(updateTimer, 1000); // 开始定时更新时间
+        }
+
+        function isLeapYear(year) {
+            // 判断是否为闰年的函数
+            return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
+        }
+
+        function updateTimer() {
+            const startTime = new Date(2014, 9, 28, 0, 0, 0); // 2014年10月28日
+            const currentTime = new Date();
+            const timeDifference = currentTime - startTime;
+
+            let years = currentTime.getFullYear() - startTime.getFullYear();
+            let months = currentTime.getMonth() - startTime.getMonth();
+            let days = currentTime.getDate() - startTime.getDate();
+            let hours = currentTime.getHours() - startTime.getHours();
+            let minutes = currentTime.getMinutes() - startTime.getMinutes();
+            let seconds = currentTime.getSeconds() - startTime.getSeconds();
+
+            if (seconds < 0) {
+                seconds += 60;
+                minutes--;
+            }
+            if (minutes < 0) {
+                minutes += 60;
+                hours--;
+            }
+            if (hours < 0) {
+                hours += 24;
+                days--;
+            }
+            if (days < 0) {
+                const lastDayOfMonth = new Date(currentTime.getFullYear(), currentTime.getMonth(), 0).getDate();
+                days += lastDayOfMonth;
+                months--;
+            }
+            if (months < 0) {
+                months += 12;
+                years--;
+            }
+
+            // 考虑每个月的天数差异
+            const daysInMonth = [31, isLeapYear(currentTime.getFullYear()) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+            if (days < 0) {
+                days += daysInMonth[(currentTime.getMonth() + 11) % 12];
+                months--;
+            }
+
+            const timerElement = document.getElementById("timer");
+            timerElement.textContent = `曼德和朵拉在一起已经:${years} 年，${months} 月，${days} 天, ${hours} 小时, ${minutes} 分钟, ${seconds} 秒啦`;
+        }
+    </script>
+</body>
+</html>
